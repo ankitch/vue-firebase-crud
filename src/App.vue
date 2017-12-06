@@ -2,11 +2,11 @@
   <div id="app">
     <v-app dark>
     <nav-bar></nav-bar>
+    <v-content>
     <v-container>
-      <vue-form> </vue-form>
+      <router-view></router-view>
     </v-container> 
-    
-    <router-view/>
+    </v-content>
     </v-app>
   </div>
 

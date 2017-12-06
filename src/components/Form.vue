@@ -7,7 +7,8 @@
       :counter="100"
       required
       prepend-icon="face"   
-    ></v-text-field>
+    >
+    </v-text-field>
 
 
     <v-text-field
@@ -47,9 +48,16 @@
 <script>
 import axios from 'axios'
   export default {
+
+    data(){
+      return{
+        id: $route.params.id
+      }
+    },
     data: () => ({
+      // id: this.$route.params.id,
       valid: true,
-      name: '',
+     
       nameRules: [
         (v) => !!v || 'Name is required',
         (v) => v && v.length <= 100 || 'Name must be less than 100 characters'
@@ -81,11 +89,34 @@ import axios from 'axios'
             contact: this.contact,
             email: this.email,
             select: this.select,
+          }).then(function(){
+            console.log("post sucessful")
+          })
+        }
+        if(this.$route.params.id){
+          axios.post('https://contact-1b605.firebaseio.com/contact/'+ this.$route.params.id +'/.json').then(function(response){
+            console.log(response)
           })
         }
       },
       clear () {
         this.$refs.form.reset()
+      }
+    },
+    created(){
+      let self = this;
+      if (this.$route.params.id){
+        console.log(this.$route.params.id)
+        
+        axios.get('https://contact-1b605.firebaseio.com/contact/'+ this.$route.params.id +'/.json').then(function(response){
+            console.log(response.data)
+            return response.data
+        }).then(function(data){
+            self.name = data.name,
+            self.contact = data.contact,
+            self.email = data.email,
+            self.select = data.select
+        })
       }
     }
   }

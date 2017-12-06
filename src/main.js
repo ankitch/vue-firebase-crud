@@ -4,10 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
+import VueResource from 'vue-resource'
 
 // index.js or main.js
 import('../node_modules/vuetify/dist/vuetify.min.css') // Ensure you are using css-loader
 
+Vue.use(VueResource)
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)

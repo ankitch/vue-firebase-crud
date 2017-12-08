@@ -9,7 +9,6 @@
     </v-content>
     </v-app>
   </div>
-
 </template>
 
 <script>

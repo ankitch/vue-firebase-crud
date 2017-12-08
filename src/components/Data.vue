@@ -21,7 +21,6 @@
       >
 
       <template slot="items" slot-scope="props">
-        <td>
           <v-edit-dialog
             lazy
           > {{ props.item.name }}
@@ -46,11 +45,10 @@
         </router-link>
         <td>
        <router-link to="/data" exact>
-            <td @click="delte(props.item.id)" class="text-xs-right">
+            <td @click="delte(props.item.id)" ref="myButton"  class="text-xs-right">
                 <v-icon>delete</v-icon>
             </td>
        </router-link>
-        
 
 
         <td class="text-xs-right">
@@ -137,11 +135,13 @@ import axios from 'axios'
 
     },
     methods:{
-        delte(id){
-            axios.delete("https://contact-1b605.firebaseio.com/contact/" + id + "/.json").then(function(data){
-                console.log(data)
-            }).then(function(){
-              ``
+        delte(idk){
+            let self = this
+            const remove = self.items.indexOf(idk)
+            console.log(remove)
+            axios.delete("https://contact-1b605.firebaseio.com/contact/" + idk + "/.json").then(function(data){
+                console.log(self.items)
+                self.items.pop(idk)
             })
 
             

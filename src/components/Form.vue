@@ -1,4 +1,6 @@
 <template>
+<div>
+  
   <v-form v-model="valid" ref="form" lazy-validation>
     <v-text-field
       label="Name"
@@ -7,7 +9,7 @@
       :counter="100"
       required
       prepend-icon="face"   
-    >
+    > 
     </v-text-field>
 
 
@@ -43,21 +45,36 @@
       submit
     </v-btn>
     <v-btn @click="clear">clear</v-btn>
-  </v-form>
+  </v-form> 
+
+  <notify-sucess v-if="sucess"></notify-sucess>
+  <notify-error v-if="errors"></notify-error>
+  </div>
 </template>
+
+
 <script>
 import axios from 'axios'
+import Notify from '../components/Notify'
+import NotifyError from '../components/NotifyError'
   export default {
-
+    components:{
+      'notify-sucess': Notify,
+      'notify-error': NotifyError
+    },
     data(){
       return{
-        id: $route.params.id
+        id: $route.params.id,
+        
       }
     },
     data: () => ({
       // id: this.$route.params.id,
+      // message: 'hello',
+      sucess: false,
+      errors: false,
       valid: true,
-     
+      name: '', 
       nameRules: [
         (v) => !!v || 'Name is required',
         (v) => v && v.length <= 100 || 'Name must be less than 100 characters'
@@ -79,30 +96,52 @@ import axios from 'axios'
         'Other',
       ],
     }),
+
+
     methods: {
       submit () {
+        let self = this;
         if (this.$refs.form.validate()) {
-            console.log('hello')
-          // Native form submission is not yet supported
+          if(!this.$route.params.id){
+           // Native form submission is not yet supported
           axios.post('https://contact-1b605.firebaseio.com/contact.json', {
             name: this.name,
             contact: this.contact,
             email: this.email,
             select: this.select,
-          }).then(function(){
+
+          }).then(function(response){
             console.log("post sucessful")
+            self.sucess = true
+            self.errors = false
+            self.$refs.form.reset()
+
+          },function(error){
+            console.log(error)
+            self.sucess = false
+            self.errors = true
           })
-        }
-        if(this.$route.params.id){
-          axios.post('https://contact-1b605.firebaseio.com/contact/'+ this.$route.params.id +'/.json').then(function(response){
+          }
+          if(this.$route.params.id){
+          axios.patch('https://contact-1b605.firebaseio.com/contact/'+ this.$route.params.id +'/.json').then(function(response)  {
             console.log(response)
+            console.log("kera")
+          }, function(error){
+            console.log(error)
           })
         }
+        }
+
+
+       
+
+
       },
       clear () {
         this.$refs.form.reset()
       }
     },
+
     created(){
       let self = this;
       if (this.$route.params.id){
@@ -119,5 +158,7 @@ import axios from 'axios'
         })
       }
     }
+
+
   }
 </script>
